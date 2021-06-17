@@ -40,7 +40,7 @@ data1.loc[data1['shot_type']=='3PT Field Goal','shot_type']=3
 
 # EDA analysis
 
-# average points per game - only 2FG and 3FG included
+#1. average points per game - only 2FG and 3FG included
 points_scored=data1.shot_made_flag * data1.shot_type
 
 games_no=data1['game_id'].unique().size
@@ -52,33 +52,91 @@ data_yes=data1[data1['shot_made_flag']==1]
 # failed to score data
 data_no=data1[data1['shot_made_flag']==0]
 
-# Which action type worked/failed the most
+# 2. Which action_type worked/failed the most
 plt.figure(figsize=(10,8))
 data1['action_type'].value_counts()[:10,].plot(kind='bar',)
+plt.tight_layout()
 plt.show()
 
 plt.figure(figsize=(10,8))
 data_yes['action_type'].value_counts()[:10,].plot(kind='bar')
+plt.tight_layout()
 plt.show()
+
 plt.figure(figsize=(10,8))
 data_no['action_type'].value_counts()[:10,].plot(kind='bar')
+plt.tight_layout()
 plt.show()
 
 
 
-# From which zone area did he score/fail the most
+# 3. From which shot_zone_area did he score/fail the most
 plt.figure(figsize=(10,8))
 data1['shot_zone_area'].value_counts().plot(kind='bar')
+plt.tight_layout()
 plt.show()
 
 plt.figure(figsize=(10,8))
 data_yes['shot_zone_area'].value_counts().plot(kind='bar')
+plt.tight_layout()
 plt.show()
+
 plt.figure(figsize=(10,8))
 data_no['shot_zone_area'].value_counts().plot(kind='bar')
+plt.tight_layout()
 plt.show()
 
-#
-# plt.hist(data1['shot_made_flag'])
-# plt.show()
 
+# 4. From which shot_zone_basic did he score/fail the most
+plt.figure(figsize=(10,8))
+data1['shot_zone_basic'].value_counts().plot(kind='bar')
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10,8))
+data_yes['shot_zone_basic'].value_counts().plot(kind='bar')
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10,8))
+data_no['shot_zone_basic'].value_counts().plot(kind='bar')
+plt.tight_layout()
+plt.show()
+
+# 5. From which shot_zone_range did he score/fail the most
+plt.figure(figsize=(10,8))
+data1['shot_zone_range'].value_counts().plot(kind='bar')
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10,8))
+data_yes['shot_zone_range'].value_counts().plot(kind='bar')
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10,8))
+data_no['shot_zone_range'].value_counts().plot(kind='bar')
+plt.tight_layout()
+plt.show()
+
+opponent_teams=data1['opponent'].unique()
+opp_points={}
+
+for i in opponent_teams:
+    points=data1.loc[data1['opponent']==i,'shot_made_flag'] * data1.loc[data1['opponent']==i,'shot_type']
+    opp_points[points.sum()]=i
+
+opp_sum1=list(opp_points.keys())
+opp_sum1.sort(reverse=True)
+opp_sum_teams1=[]
+for i in opp_sum1[:5]:
+    opp_sum_teams1.append(opp_points[i])
+opp_sum_teams2=[]
+for i in opp_sum1[-1:-6:-1]:
+    opp_sum_teams2.append(opp_points[i])
+
+plt.bar(opp_sum_teams1,opp_sum1[:5])
+plt.show()
+
+plt.bar(opp_sum_teams2,opp_sum1[-1:-6:-1])
+plt.show()
