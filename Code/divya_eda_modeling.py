@@ -15,9 +15,9 @@ from matplotlib.patches import Circle, Rectangle, Arc
 from matplotlib import rcParams
 
 # Look at dataset
-df = pd.read_csv('../Data/data.csv', header=0)
-print(df.head)
-print(df.columns)
+data = pd.read_csv('../Data/data.csv', header=0)
+print(data.head)
+print(data.columns)
 '''
 ['action_type', 'combined_shot_type', 'game_event_id', 'game_id', 'lat',
        'loc_x', 'loc_y', 'lon', 'minutes_remaining', 'period', 'playoffs',
@@ -28,12 +28,14 @@ print(df.columns)
 '''
 
 # Get column datatypes and summaries
-print(df.dtypes)
+print(data.dtypes)
 
 # Drop rows which were intended for Kaggle competition
 # These rows are missing information about whether the shot was made or not
-df = df[(df['shot_made_flag'] == 1) | (df['shot_made_flag'] == 0)]
-df['made'] = np.where(df['shot_made_flag'] == 1.0, 'Made', 'Missed')
+#
+data1 = data.dropna()
+#data1 = data1[(data1['shot_made_flag'] == 1) | (data1['shot_made_flag'] == 0)]
+data1['made'] = np.where(data1['shot_made_flag'] == 1.0, 'Made', 'Missed')
 
 # ----------------------------------------
 ### EDA ###
@@ -51,8 +53,8 @@ Ideas for EDA. Don't need to do all of them.
 '''
 
 # Shot chart - overlay zone on court
-pd.pivot_table(df, index=['shot_type'],values=['made'], columns=['period'], aggfunc='count')
-pd.pivot_table(df, index=['shot_zone_area'],values=['shot_made_flag'], columns=['made'], aggfunc='count')
+pd.pivot_table(data1, index=['shot_type'],values=['made'], columns=['period'], aggfunc='count')
+pd.pivot_table(data1, index=['shot_zone_area'],values=['shot_made_flag'], columns=['made'], aggfunc='count')
 
 
 # analysis by game time - minutes and seconds
@@ -136,10 +138,10 @@ def draw_court(ax=None, color='black', lw=2, outer_lines=False):
 #plt.ylim(-100,500)
 #plt.show()
 
-made_array = np.where(df['made'] == 'Made', 'green', 'red')
+made_array = np.where(data1['made'] == 'Made', 'green', 'red')
 
 plt.figure(figsize=(12,11))
-plt.scatter(df.loc_x, df.loc_y, c=made_array)
+plt.scatter(data1.loc_x, data1.loc_y, c=made_array)
 draw_court(outer_lines=True)
 # Descending values along the axis from left to right
 plt.xlim(300,-300)
@@ -147,9 +149,50 @@ plt.ylim(-100,500)
 plt.savefig('../Graphs/ShotChart_v1_draft.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+print(data1.shot_zone_area.unique())
 
 
-ax = df.plot.hexbin(x='loc_x',
+shot_zone_dict = {'Left Side(L)': 'red',
+                  'Left Side Center(LC)': 'orange',
+                  'Center(C)': 'purple',
+                  'Right Side Center(RC)': 'green',
+                  'Right Side(R)': 'blue',
+                  'Back Court(BC)': 'grey'
+}
+
+
+plt.figure(figsize=(12,11))
+plt.scatter(data1.loc_x, data1.loc_y, c=data1['shot_zone_area'].map(shot_zone_dict))
+draw_court(outer_lines=True)
+# Descending values along the axis from left to right
+plt.xlim(300,-300)
+plt.ylim(-100,500)
+plt.savefig('../Graphs/ShotChart_v2_draft.jpeg', dpi=300, bbox_inches='tight')
+plt.show()
+
+shot_zone_basic_dict = {
+    'Mid-Range':'blue',
+    'Restricted Area':'red',
+    'In The Paint (Non-RA)':'orange',
+    'Above the Break 3':'green',
+    'Right Corner 3':'lightgreen',
+    'Backcourt':'grey',
+    'Left Corner 3':'greenyellow'
+
+}
+
+plt.figure(figsize=(12,11))
+plt.scatter(data1.loc_x, data1.loc_y, c=data1['shot_zone_basic'].map(shot_zone_basic_dict))
+draw_court(outer_lines=True)
+# Descending values along the axis from left to right
+plt.xlim(300,-300)
+plt.ylim(-100,500)
+plt.savefig('../Graphs/ShotChart_v3_draft.jpeg', dpi=300, bbox_inches='tight')
+plt.show()
+
+'''
+# Decide if we still need this
+ax = data1.plot.hexbin(x='loc_x',
                     y='loc_y',
                     C='shot_made_flag',
                     reduce_C_function=np.mean,
@@ -161,6 +204,7 @@ plt.savefig('../Graphs/ShotChart_v2_draft.jpeg', dpi=300, bbox_inches='tight')
 #plt.xlim(300,-300)
 #plt.ylim(-100,500)
 #plt.show()
+'''
 
 # Add hex to aggregate shot values
 def create_court(ax, color):
@@ -208,11 +252,11 @@ ax = fig.add_axes([0, 0, 1, 1])
 ax = create_court(ax, 'black')
 
 # Plot hexbin of shots
-ax.hexbin(df['loc_x'], df['loc_y'] + 1,
+ax.hexbin(data1['loc_x'], data1['loc_y'] + 60,
           gridsize=(50, 50),
           extent=(-300, 300, 0, 940),
           bins=12,
-          C=df['shot_made_flag'],
+          C=data1['shot_made_flag'],
           reduce_C_function=np.mean,
           cmap='RdYlGn')
 
@@ -220,14 +264,12 @@ ax.hexbin(df['loc_x'], df['loc_y'] + 1,
 ax.text(0, 1.05, 'Kobe Bryant\nCareer Shooting', transform=ax.transAxes, ha='left', va='baseline')
 
 # Save and show figure
-plt.savefig('../Graphs/ShotChart_v3_draft.jpeg', dpi=300, bbox_inches='tight')
+plt.savefig('../Graphs/ShotChart_v4_draft.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 
-# Add avg field goal percentage on 2's versus 3's
-
-# Add avg field goal percentage by zone
-
-# Add avg field goal percentage by quarter
-
 # Add avg field goal percentage by distance - do (1) bins and (2) continuous line
+
+# Look at shot zone chart for teams in which he had highest field goal percentage and lowest field goal percentage
+# Use effective field goal percentage
+# https://www.basketball-reference.com/about/glossary.html
