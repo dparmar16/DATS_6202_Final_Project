@@ -54,69 +54,333 @@ data_yes=data1[data1['shot_made_flag']==1]
 data_no=data1[data1['shot_made_flag']==0]
 
 # 2. Which action_type worked/failed the most
+# 2.1
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
+          '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+actions=list(data1['action_type'].unique())
+actions_dict={}
+total_size=data1['shot_made_flag'].size
+shots_percent=[]
+
+for i in actions:
+    score_no=data1.loc[data1['action_type']==i,'shot_made_flag'].size
+    actions_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data1['action_type'].value_counts()[:10,].plot(kind='bar',)
+plots=data1['action_type'].value_counts()[:10,].plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of top 10 action_type - total')
 plt.tight_layout()
+plt.savefig('Graphs/2_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 2.2
+actions_dict={}
+shots_percent=[]
+
+for i in actions:
+    score_no=data_yes.loc[data_yes['action_type']==i,'shot_made_flag'].size
+    actions_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_yes['action_type'].value_counts()[:10,].plot(kind='bar')
+plots=data_yes['action_type'].value_counts()[:10,].plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of top 10 action_type - that made')
 plt.tight_layout()
+plt.savefig('Graphs/2_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 2.3
+actions_dict={}
+shots_percent=[]
+
+for i in actions:
+    score_no=data_no.loc[data_no['action_type']==i,'shot_made_flag'].size
+    actions_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_no['action_type'].value_counts()[:10,].plot(kind='bar')
+plots=data_no['action_type'].value_counts()[:10,].plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of top 10 action_type - that missed')
 plt.tight_layout()
+plt.savefig('Graphs/2_3.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 
 # 3. From which shot_zone_area did he score/fail the most
+# 3.1
+
+areas=list(data1['shot_zone_area'].unique())
+areas_dict={}
+total_size=data1['shot_made_flag'].size
+shots_percent=[]
+
+for i in areas:
+    score_no=data1.loc[data1['shot_zone_area']==i,'shot_made_flag'].size
+    areas_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data1['shot_zone_area'].value_counts().plot(kind='bar')
+plots=data1['shot_zone_area'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_area - total')
 plt.tight_layout()
+plt.savefig('Graphs/3_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 3.2
+
+areas_dict={}
+shots_percent=[]
+
+for i in areas:
+    score_no=data_yes.loc[data_yes['shot_zone_area']==i,'shot_made_flag'].size
+    areas_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_yes['shot_zone_area'].value_counts().plot(kind='bar')
+plots=data_yes['shot_zone_area'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_area - that made')
 plt.tight_layout()
+plt.savefig('Graphs/3_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 3.3
+
+areas_dict={}
+shots_percent=[]
+
+for i in areas:
+    score_no=data_no.loc[data_no['shot_zone_area']==i,'shot_made_flag'].size
+    areas_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_no['shot_zone_area'].value_counts().plot(kind='bar')
+plots=data_no['shot_zone_area'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_area - that missed')
 plt.tight_layout()
+plt.savefig('Graphs/3_3.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 
 # 4. From which shot_zone_basic did he score/fail the most
+# 4.1
+basics=list(data1['shot_zone_basic'].unique())
+basics_dict={}
+shots_percent=[]
+
+for i in basics:
+    score_no=data1.loc[data1['shot_zone_basic']==i,'shot_made_flag'].size
+    basics_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data1['shot_zone_basic'].value_counts().plot(kind='bar')
+plots=data1['shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_basic - total')
 plt.tight_layout()
+plt.savefig('Graphs/4_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 4.2
+basics_dict={}
+shots_percent=[]
+
+for i in basics:
+    score_no=data_yes.loc[data_yes['shot_zone_basic']==i,'shot_made_flag'].size
+    basics_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_yes['shot_zone_basic'].value_counts().plot(kind='bar')
+plots=data_yes['shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_basic - that made')
 plt.tight_layout()
+plt.savefig('Graphs/4_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 4.3
+basics_dict={}
+shots_percent=[]
+
+for i in basics:
+    score_no=data_no.loc[data_no['shot_zone_basic']==i,'shot_made_flag'].size
+    basics_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_no['shot_zone_basic'].value_counts().plot(kind='bar')
+plots=data_no['shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_basic - that missed')
 plt.tight_layout()
+plt.savefig('Graphs/4_3.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 # 5. From which shot_zone_range did he score/fail the most
+# 5.1
+ranges=list(data1['shot_zone_range'].unique())
+ranges_dict={}
+shots_percent=[]
+
+for i in ranges:
+    score_no=data1.loc[data1['shot_zone_range']==i,'shot_made_flag'].size
+    ranges_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data1['shot_zone_range'].value_counts().plot(kind='bar')
+plots=data1['shot_zone_range'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_range - total')
 plt.tight_layout()
+plt.savefig('Graphs/5_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 5.2
+ranges_dict={}
+shots_percent=[]
+
+for i in ranges:
+    score_no=data_yes.loc[data_yes['shot_zone_range']==i,'shot_made_flag'].size
+    ranges_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_yes['shot_zone_range'].value_counts().plot(kind='bar')
+plots=data_yes['shot_zone_range'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_range - that made')
 plt.tight_layout()
+plt.savefig('Graphs/5_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 5.3
+
+ranges_dict={}
+shots_percent=[]
+
+for i in ranges:
+    score_no=data_no.loc[data_no['shot_zone_range']==i,'shot_made_flag'].size
+    ranges_dict[i]=score_no
+    shots_percent.append((score_no*100)/total_size)
+
+shots_percent.sort(reverse=True)
 plt.figure(figsize=(10,8))
-data_no['shot_zone_range'].value_counts().plot(kind='bar')
+plots=data_no['shot_zone_range'].value_counts().plot(kind='bar',color=colors)
+z=0
+for bar in plots.patches:
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+    z=z+1
+
+plt.title('Histogram of shot_zone_range - that missed')
 plt.tight_layout()
+plt.savefig('Graphs/5_3.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 # 6. Against which team did he best/worst perform
@@ -136,10 +400,16 @@ opp_sum_teams2=[]
 for i in opp_sum1[-1:-7:-1]:
     opp_sum_teams2.append(opp_points[i])
 
+plt.figure(figsize=(10,8))
 plt.bar(opp_sum_teams1,opp_sum1[:5])
+plt.title('barplot of 5 opponent teams vs score - that kobe scored highest')
+plt.savefig('Graphs/6_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+plt.figure(figsize=(10,8))
 plt.bar(opp_sum_teams2,opp_sum1[-1:-7:-1])
+plt.title('barplot of 6 opponent teams vs score - that kobe scored least')
+plt.savefig('Graphs/6_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 
@@ -151,6 +421,7 @@ for i in seasons:
     accuracy=(data_yes.loc[data_yes['season']==i,'shot_made_flag'].size)/(data1.loc[data1['season']==i,'shot_made_flag'].size)
     seasons_dict[i]=accuracy
 
+plt.figure(figsize=(10,8))
 plt.plot(list(seasons_dict.keys()),list(seasons_dict.values()))
 plt.scatter(list(seasons_dict.keys()),list(seasons_dict.values()),s=40)
 plt.title('accuracy vs seasons')
@@ -158,57 +429,60 @@ plt.xticks(rotation=90)
 plt.xlabel('seasons')
 plt.ylabel('accuracy')
 plt.tight_layout()
+plt.savefig('Graphs/7.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 
 # 8. shots vs period
 periods=list(data1['period'].unique())
 periods_dict={}
-total_size=data1['shot_made_flag'].size
-shots_percent1=[]
+shots_percent=[]
 
 for i in periods:
     score_no=data1.loc[data1['period']==i,'shot_made_flag'].size
     periods_dict[i]=score_no
-    shots_percent1.append((score_no*100)/total_size)
+    shots_percent.append((score_no*100)/total_size)
 
-plt.figure(figsize=(8, 8))
+plt.figure(figsize=(10, 8))
 plots = sns.barplot(x=list(periods_dict.keys()), y=list(periods_dict.values()))
 z=0
 for bar in plots.patches:
-    plots.annotate('%0.2f%%'%(shots_percent1[z]),
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
                    (bar.get_x() + bar.get_width() / 2,
                     bar.get_height()), ha='center', va='center',
                    size=15, xytext=(0, 8),
                    textcoords='offset points')
     z=z+1
 
-plt.title('shots attempted per period')
+plt.title('shots attempted vs period')
 plt.xlabel('period/quarters')
 plt.ylabel('number of shots')
+plt.savefig('Graphs/8_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 periods_dict_yes={}
-shots_percent2=[]
+shots_percent=[]
 for i in periods:
     score_no=data_yes.loc[data_yes['period']==i,'shot_made_flag'].size
     periods_dict_yes[i]=score_no
-    shots_percent2.append((score_no*100)/total_size)
+    shots_percent.append((score_no*100)/total_size)
 
-plt.figure(figsize=(8, 8))
+
+plt.figure(figsize=(10, 8))
 plots = sns.barplot(x=list(periods_dict_yes.keys()), y=list(periods_dict_yes.values()))
 z=0
 for bar in plots.patches:
-    plots.annotate('%0.2f%%'%(shots_percent2[z]),
+    plots.annotate('%0.2f%%'%(shots_percent[z]),
                    (bar.get_x() + bar.get_width() / 2,
                     bar.get_height()), ha='center', va='center',
                    size=15, xytext=(0, 8),
                    textcoords='offset points')
     z=z+1
 
-plt.title('shots scored per period')
+plt.title('shots scored vs period')
 plt.xlabel('period/quarters')
 plt.ylabel('number of shots')
+plt.savefig('Graphs/8_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 
