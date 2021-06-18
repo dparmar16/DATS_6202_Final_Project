@@ -499,5 +499,45 @@ plt.ylabel('number of shots')
 plt.savefig('Graphs/8_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
+# 2002 analysis
+# Against which team did he best/worst perform
+data2002=data1[data1['season']=='2001-02']
+opponent_teams=data2002['opponent'].unique()
+opp_points=[]
+
+for i in opponent_teams:
+    points=data2002.loc[data2002['opponent']==i,'shot_made_flag'] * data2002.loc[data2002['opponent']==i,'shot_type']
+    matches=data2002.loc[data2002['opponent']==i,'game_id'].unique().size
+    print('team =',i,'points = ',points.sum(),'matches =',matches)
+    opp_points.append([i,points.sum()/matches])
+
+opp_points_df=pd.DataFrame(opp_points,columns=['team','avg'], dtype=float)
+
+opp_points_df_sort=opp_points_df.sort_values(by='avg',ascending=False)
+
+plt.figure(figsize=(10,8))
+plots=sns.barplot(opp_points_df_sort.head(5)['team'],opp_points_df_sort.head(5)['avg'])
+for bar in plots.patches:
+    plots.annotate(format(bar.get_height(), '.2f'),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+
+plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged highest')
+plt.savefig('Graphs/2002_1.jpeg', dpi=300, bbox_inches='tight')
+plt.show()
+lenght1=opp_points_df_sort['team'].size
+plt.figure(figsize=(10,8))
+plots=sns.barplot(opp_points_df_sort.tail(5)['team'],opp_points_df_sort.tail(5)['avg'])
+for bar in plots.patches:
+    plots.annotate(format(bar.get_height(), '.2f'),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged least')
+plt.savefig('Graphs/2002_2.jpeg', dpi=300, bbox_inches='tight')
+plt.show()
 
 
