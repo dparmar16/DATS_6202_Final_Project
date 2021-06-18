@@ -389,7 +389,8 @@ opp_points={}
 
 for i in opponent_teams:
     points=data1.loc[data1['opponent']==i,'shot_made_flag'] * data1.loc[data1['opponent']==i,'shot_type']
-    opp_points[points.sum()]=i
+    matches=data1.loc[data1['opponent']==i,'game_id'].unique().size
+    opp_points[points.sum()/matches]=i
 
 opp_sum1=list(opp_points.keys())
 opp_sum1.sort(reverse=True)
@@ -397,18 +398,31 @@ opp_sum_teams1=[]
 for i in opp_sum1[:5]:
     opp_sum_teams1.append(opp_points[i])
 opp_sum_teams2=[]
-for i in opp_sum1[-1:-7:-1]:
+for i in opp_sum1[-1:-6:-1]:
     opp_sum_teams2.append(opp_points[i])
 
 plt.figure(figsize=(10,8))
-plt.bar(opp_sum_teams1,opp_sum1[:5])
-plt.title('barplot of 5 opponent teams vs score - that kobe scored highest')
+plots=sns.barplot(opp_sum_teams1,opp_sum1[:5])
+for bar in plots.patches:
+    plots.annotate(format(bar.get_height(), '.2f'),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+
+plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged highest')
 plt.savefig('Graphs/6_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 plt.figure(figsize=(10,8))
-plt.bar(opp_sum_teams2,opp_sum1[-1:-7:-1])
-plt.title('barplot of 6 opponent teams vs score - that kobe scored least')
+plots=sns.barplot(opp_sum_teams2,opp_sum1[-1:-6:-1])
+for bar in plots.patches:
+    plots.annotate(format(bar.get_height(), '.2f'),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged least')
 plt.savefig('Graphs/6_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
@@ -484,7 +498,6 @@ plt.xlabel('period/quarters')
 plt.ylabel('number of shots')
 plt.savefig('Graphs/8_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
-
 
 
 
