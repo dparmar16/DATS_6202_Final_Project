@@ -21,13 +21,13 @@ colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
           '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 # 2002 analysis
 # Against which team did he best/worst perform
-data2002=data1[data1['season']=='2001-02']
-opponent_teams=data2002['opponent'].unique()
+data2009=data1[data1['season']=='2008-09']
+opponent_teams=data2009['opponent'].unique()
 opp_points=[]
 
 for i in opponent_teams:
-    points=data2002.loc[data2002['opponent']==i,'shot_made_flag'] * data2002.loc[data2002['opponent']==i,'shot_type']
-    matches=data2002.loc[data2002['opponent']==i,'game_id'].unique().size
+    points=data2009.loc[data2009['opponent']==i,'shot_made_flag'] * data2009.loc[data2009['opponent']==i,'shot_type']
+    matches=data2009.loc[data2009['opponent']==i,'game_id'].unique().size
     print('team =',i,'points = ',points.sum(),'matches =',matches)
     opp_points.append([i,points.sum()/matches])
 
@@ -45,7 +45,7 @@ opp_points_df_sort=opp_points_df.sort_values(by='avg',ascending=False)
 #                    textcoords='offset points')
 #
 # plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged highest')
-# plt.savefig('Graphs2002/2002_1_1.jpeg', dpi=300, bbox_inches='tight')
+# plt.savefig('Graphs2009/2002_1_1.jpeg', dpi=300, bbox_inches='tight')
 # plt.show()
 # lenght1=opp_points_df_sort['team'].size
 # plt.figure(figsize=(10,8))
@@ -57,7 +57,7 @@ opp_points_df_sort=opp_points_df.sort_values(by='avg',ascending=False)
 #                    size=15, xytext=(0, 8),
 #                    textcoords='offset points')
 # plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged least')
-# plt.savefig('Graphs2002/2002_1_2.jpeg', dpi=300, bbox_inches='tight')
+# plt.savefig('Graphs2009/2002_1_2.jpeg', dpi=300, bbox_inches='tight')
 # plt.show()
 
 # 2 most effective action types against highest and lowest averaged teams
@@ -66,18 +66,18 @@ opp_points_df_sort.reset_index(inplace=True)
 HA2teams=opp_points_df_sort.head(2)['team']
 LA2teams=opp_points_df_sort.tail(2)['team']
 
-data2002_yes=data2002[data2002['shot_made_flag']==1]
+data2009_yes=data2009[data2009['shot_made_flag']==1]
 
 print('most effective action types against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    # actions2002=list(data2002.loc[data2002['opponent']==j,'action_type'].unique())
+    # actions2002=list(data2009.loc[data2009['opponent']==j,'action_type'].unique())
     # actions_dict1={}
-    # total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
+    # total_size=data2009.loc[data2009['opponent']==j,'shot_made_flag'].size
     # shots_percent1=[]
     #
     # for i in actions2002:
-    #     score_no=data2002.loc[(data2002['opponent']==j) & (data2002['action_type']==i),'shot_made_flag'].size
+    #     score_no=data2009.loc[(data2009['opponent']==j) & (data2009['action_type']==i),'shot_made_flag'].size
     #     actions_dict1[i]=score_no
     #     shots_percent1.append(round((score_no*100)/total_size,2))
     # print('for team : ',j,'for total attempts')
@@ -86,7 +86,7 @@ for j in HA2teams:
     #
     # shots_percent1.sort(reverse=True)
     # plt.figure(figsize=(10,8))
-    # plots=data2002.loc[data2002['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
+    # plots=data2009.loc[data2009['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
     # z=0
     # for bar in plots.patches:
     #     plots.annotate('%0.2f%%'%(shots_percent1[z]),
@@ -98,16 +98,16 @@ for j in HA2teams:
     #
     # plt.title('Histogram of top 5 action_type for '+j+'- total')
     # plt.tight_layout()
-    # plt.savefig('Graphs2002/2002_2-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    # plt.savefig('Graphs2009/2002_2-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     # plt.show()
 
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'action_type'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['action_type']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['action_type']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -116,7 +116,7 @@ for j in HA2teams:
 
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -128,19 +128,19 @@ for j in HA2teams:
 
     plt.title('Histogram of top 5 action_type for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_2-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_2-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    # actions2002=list(data2002.loc[data2002['opponent']==j,'action_type'].unique())
+    # actions2002=list(data2009.loc[data2009['opponent']==j,'action_type'].unique())
     # actions_dict1={}
-    # total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
+    # total_size=data2009.loc[data2009['opponent']==j,'shot_made_flag'].size
     # shots_percent1=[]
     #
     # for i in actions2002:
-    #     score_no=data2002.loc[(data2002['opponent']==j) & (data2002['action_type']==i),'shot_made_flag'].size
+    #     score_no=data2009.loc[(data2009['opponent']==j) & (data2009['action_type']==i),'shot_made_flag'].size
     #     actions_dict1[i]=score_no
     #     shots_percent1.append(round((score_no*100)/total_size,2))
     # print('for team : ',j,'for total attempts')
@@ -149,7 +149,7 @@ for j in LA2teams:
     #
     # shots_percent1.sort(reverse=True)
     # plt.figure(figsize=(10,8))
-    # plots=data2002.loc[data2002['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
+    # plots=data2009.loc[data2009['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
     # z=0
     # for bar in plots.patches:
     #     plots.annotate('%0.2f%%'%(shots_percent1[z]),
@@ -161,15 +161,15 @@ for j in LA2teams:
     #
     # plt.title('Histogram of top 5 action_type for '+j+'- total')
     # plt.tight_layout()
-    # plt.savefig('Graphs2002/2002_2-3_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    # plt.savefig('Graphs2009/2002_2-3_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     # plt.show()
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'action_type'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['action_type']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['action_type']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -177,7 +177,7 @@ for j in LA2teams:
     print(shots_percent2)
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -189,20 +189,20 @@ for j in LA2teams:
 
     plt.title('Histogram of top 5 action_type for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_2-4_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_2-4_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 # 3 most effective shot zone area against highest and lowest averaged teams
 print('most effective shot zone area against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_area'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_area']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['shot_zone_area']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -211,7 +211,7 @@ for j in HA2teams:
 
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].value_counts()[:5,].plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_area'].value_counts()[:5,].plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -223,19 +223,19 @@ for j in HA2teams:
 
     plt.title('Histogram of shot_zone_area for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_3-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_3-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_area'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_area']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['shot_zone_area']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -243,7 +243,7 @@ for j in LA2teams:
     print(shots_percent2)
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].value_counts().plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_area'].value_counts().plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -255,20 +255,20 @@ for j in LA2teams:
 
     plt.title('Histogram of shot_zone_area for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_3-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_3-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 # 4 most effective shot zone basic against highest and lowest averaged teams
 print('most effective shot zone basic against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_basic'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_basic']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['shot_zone_basic']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -277,7 +277,7 @@ for j in HA2teams:
 
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -289,19 +289,19 @@ for j in HA2teams:
 
     plt.title('Histogram of shot_zone_basic for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_4-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_4-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_basic'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_basic']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['shot_zone_basic']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -309,7 +309,7 @@ for j in LA2teams:
     print(shots_percent2)
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -321,20 +321,20 @@ for j in LA2teams:
 
     plt.title('Histogram of shot_zone_basic for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_4-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_4-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 # 5 most effective shot_zone_range against highest and lowest averaged teams
 print('most effective shot_zone_range against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_range'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_range']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['shot_zone_range']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -343,7 +343,7 @@ for j in HA2teams:
 
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].value_counts().plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_range'].value_counts().plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -355,19 +355,19 @@ for j in HA2teams:
 
     plt.title('Histogram of shot_zone_range for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_5-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_5-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_range'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_range']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['shot_zone_range']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -375,7 +375,7 @@ for j in LA2teams:
     print(shots_percent2)
     shots_percent2.sort(reverse=True)
     plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].value_counts().plot(kind='bar',color=colors)
+    plots=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_range'].value_counts().plot(kind='bar',color=colors)
     z=0
     for bar in plots.patches:
         plots.annotate('%0.2f%%'%(shots_percent2[z]),
@@ -387,20 +387,20 @@ for j in LA2teams:
 
     plt.title('Histogram of shot_zone_range for '+j+'- scored')
     plt.tight_layout()
-    plt.savefig('Graphs2002/2002_5-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_5-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 # 6 most effective period against highest and lowest averaged teams
 print('most effective period against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'period'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'period'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['period']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['period']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -422,19 +422,19 @@ for j in HA2teams:
     plt.title('shots scored vs period for '+j+'- scored')
     plt.xlabel('period/quarters')
     plt.ylabel('number of shots')
-    plt.savefig('Graphs2002/2002_6-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_6-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'period'].unique())
+    actions2002=list(data2009_yes.loc[data2009_yes['opponent']==j,'period'].unique())
     actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    total_size=data2009_yes.loc[data2009_yes['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
-        score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['period']==i),'shot_made_flag'].size
+        score_no=data2009_yes.loc[(data2009_yes['opponent']==j) & (data2009_yes['period']==i),'shot_made_flag'].size
         actions_dict1_yes[i]=score_no
         shots_percent2.append(round((score_no*100)/total_size,2))
     print('for team : ',j,'for scored shots')
@@ -455,7 +455,7 @@ for j in LA2teams:
     plt.title('shots scored vs period for '+j+'- scored')
     plt.xlabel('period/quarters')
     plt.ylabel('number of shots')
-    plt.savefig('Graphs2002/2002_6-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.savefig('Graphs2009/2002_6-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 # def draw_court(ax=None, color='black', lw=2, outer_lines=False):
@@ -529,12 +529,12 @@ for j in LA2teams:
 # for j in HA2teams:
 #     cmade={'Made':'green','Missed':'red'}
 #     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002.loc[data2002['opponent']==j,'loc_x'], data2002.loc[data2002['opponent']==j,'loc_y'], c=data2002.loc[data2002['opponent']==j,'made'].map(cmade))
+#     plt.scatter(data2009.loc[data2009['opponent']==j,'loc_x'], data2009.loc[data2009['opponent']==j,'loc_y'], c=data2009.loc[data2009['opponent']==j,'made'].map(cmade))
 #     draw_court(outer_lines=True)
 #     # Descending values along the axis from left to right
 #     plt.xlim(300,-300)
 #     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
+#     plt.savefig('Graphs2009/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
 #     plt.show()
 #
 #     print(data1.shot_zone_area.unique())
@@ -549,23 +549,23 @@ for j in LA2teams:
 #
 #
 #     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
+#     plt.scatter(data2009_yes.loc[data2009_yes['opponent']==j,'loc_x'], data2009_yes.loc[data2009_yes['opponent']==j,'loc_y'], c=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
 #     draw_court(outer_lines=True)
 #     # Descending values along the axis from left to right
 #     plt.xlim(300,-300)
 #     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v2 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
+#     plt.savefig('Graphs2009/ShotChart_v2 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
 #     plt.show()
 #
 # for j in LA2teams:
 #     cmade={'Made':'green','Missed':'red'}
 #     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002.loc[data2002['opponent']==j,'loc_x'], data2002.loc[data2002['opponent']==j,'loc_y'], c=data2002.loc[data2002['opponent']==j,'made'].map(cmade))
+#     plt.scatter(data2009.loc[data2009['opponent']==j,'loc_x'], data2009.loc[data2009['opponent']==j,'loc_y'], c=data2009.loc[data2009['opponent']==j,'made'].map(cmade))
 #     draw_court(outer_lines=True)
 #     # Descending values along the axis from left to right
 #     plt.xlim(300,-300)
 #     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
+#     plt.savefig('Graphs2009/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
 #     plt.show()
 #
 #     print(data1.shot_zone_area.unique())
@@ -580,10 +580,10 @@ for j in LA2teams:
 #
 #
 #     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
+#     plt.scatter(data2009_yes.loc[data2009_yes['opponent']==j,'loc_x'], data2009_yes.loc[data2009_yes['opponent']==j,'loc_y'], c=data2009_yes.loc[data2009_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
 #     draw_court(outer_lines=True)
 #     # Descending values along the axis from left to right
 #     plt.xlim(300,-300)
 #     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v2 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
+#     plt.savefig('Graphs2009/ShotChart_v2 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
 #     plt.show()
