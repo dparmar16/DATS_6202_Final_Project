@@ -320,3 +320,4 @@ pd.crosstab(data1.shot_zone_range, data1.made).apply(lambda r: r/r.sum(), axis=1
 
 # ----------------------------------------
 ### Modeling ###
+
