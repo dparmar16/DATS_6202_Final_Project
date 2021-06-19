@@ -313,7 +313,46 @@ plt.show()
 
 # Look for variation in field goal percentage in the feature values
 # If a feature has that variation, we should add it to the model
+
+# Not using action type since it has too many values, many with small sample
+pd.crosstab(data1.action_type, data1.made)
+pd.crosstab(data1.action_type, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# We will use combined shot type since it has more sample in each category and has variation
+pd.crosstab(data1.combined_shot_type, data1.made)
+pd.crosstab(data1.combined_shot_type, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# We will use period variable
+pd.crosstab(data1.period, data1.made)
+pd.crosstab(data1.period, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# We will may use the playoffs variable, but likelihood of making shot is nearly same in both classes
+pd.crosstab(data1.playoffs, data1.made)
+pd.crosstab(data1.playoffs, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# We will use season variable, although there is very little variation between seasons
+pd.crosstab(data1.season, data1.made)
+pd.crosstab(data1.season, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# We will use shot type, large variation between two pointers and three pointers
+pd.crosstab(data1.shot_type, data1.made)
+pd.crosstab(data1.shot_type, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# We will use shot zone area, percentages vary greatly between classes
+pd.crosstab(data1.shot_zone_area, data1.made)
+pd.crosstab(data1.shot_zone_area, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# We will use shot zone basic, it has variation between groups
+pd.crosstab(data1.shot_zone_basic, data1.made)
+pd.crosstab(data1.shot_zone_basic, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# will use shot zone range, it has variation between groups
+pd.crosstab(data1.shot_zone_range, data1.made)
 pd.crosstab(data1.shot_zone_range, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+
+# Transform variables
+
 
 # Correlation matrix of features to output
 
