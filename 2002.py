@@ -8,6 +8,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report, confusion_matrix
+from matplotlib.patches import Circle, Rectangle, Arc
+from matplotlib import rcParams
 pd.options.mode.chained_assignment = None  # default='warn'
 
 data=pd.read_csv('data.csv')
@@ -35,30 +37,30 @@ opp_points_df=pd.DataFrame(opp_points,columns=['team','avg'], dtype=float)
 
 opp_points_df_sort=opp_points_df.sort_values(by='avg',ascending=False)
 
-# plt.figure(figsize=(10,8))
-# plots=sns.barplot(opp_points_df_sort.head(5)['team'],opp_points_df_sort.head(5)['avg'])
-# for bar in plots.patches:
-#     plots.annotate(format(bar.get_height(), '.2f'),
-#                    (bar.get_x() + bar.get_width() / 2,
-#                     bar.get_height()), ha='center', va='center',
-#                    size=15, xytext=(0, 8),
-#                    textcoords='offset points')
-#
-# plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged highest')
-# plt.savefig('Graphs2002/2002_1_1.jpeg', dpi=300, bbox_inches='tight')
-# plt.show()
-# lenght1=opp_points_df_sort['team'].size
-# plt.figure(figsize=(10,8))
-# plots=sns.barplot(opp_points_df_sort.tail(5)['team'],opp_points_df_sort.tail(5)['avg'])
-# for bar in plots.patches:
-#     plots.annotate(format(bar.get_height(), '.2f'),
-#                    (bar.get_x() + bar.get_width() / 2,
-#                     bar.get_height()), ha='center', va='center',
-#                    size=15, xytext=(0, 8),
-#                    textcoords='offset points')
-# plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged least')
-# plt.savefig('Graphs2002/2002_1_2.jpeg', dpi=300, bbox_inches='tight')
-# plt.show()
+plt.figure(figsize=(10,8))
+plots=sns.barplot(opp_points_df_sort.head(5)['team'],opp_points_df_sort.head(5)['avg'])
+for bar in plots.patches:
+    plots.annotate(format(bar.get_height(), '.2f'),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+
+plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged highest')
+plt.savefig('Graphs2002/2002_1_1.jpeg', dpi=300, bbox_inches='tight')
+plt.show()
+lenght1=opp_points_df_sort['team'].size
+plt.figure(figsize=(10,8))
+plots=sns.barplot(opp_points_df_sort.tail(5)['team'],opp_points_df_sort.tail(5)['avg'])
+for bar in plots.patches:
+    plots.annotate(format(bar.get_height(), '.2f'),
+                   (bar.get_x() + bar.get_width() / 2,
+                    bar.get_height()), ha='center', va='center',
+                   size=15, xytext=(0, 8),
+                   textcoords='offset points')
+plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged least')
+plt.savefig('Graphs2002/2002_1_2.jpeg', dpi=300, bbox_inches='tight')
+plt.show()
 
 # 2 most effective action types against highest and lowest averaged teams
 
@@ -458,132 +460,132 @@ for j in LA2teams:
     plt.savefig('Graphs2002/2002_6-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
-# def draw_court(ax=None, color='black', lw=2, outer_lines=False):
-#     # If an axes object isn't provided to plot onto, just get current one
-#     if ax is None:
-#         ax = plt.gca()
-#
-#     # Create the various parts of an NBA basketball court
-#
-#     # Create the basketball hoop
-#     # Diameter of a hoop is 18" so it has a radius of 9", which is a value
-#     # 7.5 in our coordinate system
-#     hoop = Circle((0, 0), radius=7.5, linewidth=lw, color=color, fill=False)
-#
-#     # Create backboard
-#     backboard = Rectangle((-30, -7.5), 60, -1, linewidth=lw, color=color)
-#
-#     # The paint
-#     # Create the outer box 0f the paint, width=16ft, height=19ft
-#     outer_box = Rectangle((-80, -47.5), 160, 190, linewidth=lw, color=color,
-#                           fill=False)
-#     # Create the inner box of the paint, widt=12ft, height=19ft
-#     inner_box = Rectangle((-60, -47.5), 120, 190, linewidth=lw, color=color,
-#                           fill=False)
-#
-#     # Create free throw top arc
-#     top_free_throw = Arc((0, 142.5), 120, 120, theta1=0, theta2=180,
-#                          linewidth=lw, color=color, fill=False)
-#     # Create free throw bottom arc
-#     bottom_free_throw = Arc((0, 142.5), 120, 120, theta1=180, theta2=0,
-#                             linewidth=lw, color=color, linestyle='dashed')
-#     # Restricted Zone, it is an arc with 4ft radius from center of the hoop
-#     restricted = Arc((0, 0), 80, 80, theta1=0, theta2=180, linewidth=lw,
-#                      color=color)
-#
-#     # Three point line
-#     # Create the side 3pt lines, they are 14ft long before they begin to arc
-#     corner_three_a = Rectangle((-220, -47.5), 0, 140, linewidth=lw,
-#                                color=color)
-#     corner_three_b = Rectangle((220, -47.5), 0, 140, linewidth=lw, color=color)
-#     # 3pt arc - center of arc will be the hoop, arc is 23'9" away from hoop
-#     # I just played around with the theta values until they lined up with the
-#     # threes
-#     three_arc = Arc((0, 0), 475, 475, theta1=22, theta2=158, linewidth=lw,
-#                     color=color)
-#
-#     # Center Court
-#     center_outer_arc = Arc((0, 422.5), 120, 120, theta1=180, theta2=0,
-#                            linewidth=lw, color=color)
-#     center_inner_arc = Arc((0, 422.5), 40, 40, theta1=180, theta2=0,
-#                            linewidth=lw, color=color)
-#
-#     # List of the court elements to be plotted onto the axes
-#     court_elements = [hoop, backboard, outer_box, inner_box, top_free_throw,
-#                       bottom_free_throw, restricted, corner_three_a,
-#                       corner_three_b, three_arc, center_outer_arc,
-#                       center_inner_arc]
-#
-#     if outer_lines:
-#         # Draw the half court line, baseline and side out bound lines
-#         outer_lines = Rectangle((-250, -47.5), 500, 470, linewidth=lw,
-#                                 color=color, fill=False)
-#         court_elements.append(outer_lines)
-#
-#     # Add the court elements onto the axes
-#     for element in court_elements:
-#         ax.add_patch(element)
-#
-#     return ax
-#
-# for j in HA2teams:
-#     cmade={'Made':'green','Missed':'red'}
-#     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002.loc[data2002['opponent']==j,'loc_x'], data2002.loc[data2002['opponent']==j,'loc_y'], c=data2002.loc[data2002['opponent']==j,'made'].map(cmade))
-#     draw_court(outer_lines=True)
-#     # Descending values along the axis from left to right
-#     plt.xlim(300,-300)
-#     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
-#     plt.show()
-#
-#     print(data1.shot_zone_area.unique())
-#
-#     shot_zone_dict = {'Left Side(L)': 'red',
-#                       'Left Side Center(LC)': 'orange',
-#                       'Center(C)': 'purple',
-#                       'Right Side Center(RC)': 'green',
-#                       'Right Side(R)': 'blue',
-#                       'Back Court(BC)': 'grey'
-#                       }
-#
-#
-#     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
-#     draw_court(outer_lines=True)
-#     # Descending values along the axis from left to right
-#     plt.xlim(300,-300)
-#     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v2 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
-#     plt.show()
-#
-# for j in LA2teams:
-#     cmade={'Made':'green','Missed':'red'}
-#     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002.loc[data2002['opponent']==j,'loc_x'], data2002.loc[data2002['opponent']==j,'loc_y'], c=data2002.loc[data2002['opponent']==j,'made'].map(cmade))
-#     draw_court(outer_lines=True)
-#     # Descending values along the axis from left to right
-#     plt.xlim(300,-300)
-#     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
-#     plt.show()
-#
-#     print(data1.shot_zone_area.unique())
-#
-#     shot_zone_dict = {'Left Side(L)': 'red',
-#                       'Left Side Center(LC)': 'orange',
-#                       'Center(C)': 'purple',
-#                       'Right Side Center(RC)': 'green',
-#                       'Right Side(R)': 'blue',
-#                       'Back Court(BC)': 'grey'
-#                       }
-#
-#
-#     plt.figure(figsize=(12,11))
-#     plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
-#     draw_court(outer_lines=True)
-#     # Descending values along the axis from left to right
-#     plt.xlim(300,-300)
-#     plt.ylim(-100,500)
-#     plt.savefig('../Graphs2002/ShotChart_v2 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
-#     plt.show()
+def draw_court(ax=None, color='black', lw=2, outer_lines=False):
+    # If an axes object isn't provided to plot onto, just get current one
+    if ax is None:
+        ax = plt.gca()
+
+    # Create the various parts of an NBA basketball court
+
+    # Create the basketball hoop
+    # Diameter of a hoop is 18" so it has a radius of 9", which is a value
+    # 7.5 in our coordinate system
+    hoop = Circle((0, 0), radius=7.5, linewidth=lw, color=color, fill=False)
+
+    # Create backboard
+    backboard = Rectangle((-30, -7.5), 60, -1, linewidth=lw, color=color)
+
+    # The paint
+    # Create the outer box 0f the paint, width=16ft, height=19ft
+    outer_box = Rectangle((-80, -47.5), 160, 190, linewidth=lw, color=color,
+                          fill=False)
+    # Create the inner box of the paint, widt=12ft, height=19ft
+    inner_box = Rectangle((-60, -47.5), 120, 190, linewidth=lw, color=color,
+                          fill=False)
+
+    # Create free throw top arc
+    top_free_throw = Arc((0, 142.5), 120, 120, theta1=0, theta2=180,
+                         linewidth=lw, color=color, fill=False)
+    # Create free throw bottom arc
+    bottom_free_throw = Arc((0, 142.5), 120, 120, theta1=180, theta2=0,
+                            linewidth=lw, color=color, linestyle='dashed')
+    # Restricted Zone, it is an arc with 4ft radius from center of the hoop
+    restricted = Arc((0, 0), 80, 80, theta1=0, theta2=180, linewidth=lw,
+                     color=color)
+
+    # Three point line
+    # Create the side 3pt lines, they are 14ft long before they begin to arc
+    corner_three_a = Rectangle((-220, -47.5), 0, 140, linewidth=lw,
+                               color=color)
+    corner_three_b = Rectangle((220, -47.5), 0, 140, linewidth=lw, color=color)
+    # 3pt arc - center of arc will be the hoop, arc is 23'9" away from hoop
+    # I just played around with the theta values until they lined up with the
+    # threes
+    three_arc = Arc((0, 0), 475, 475, theta1=22, theta2=158, linewidth=lw,
+                    color=color)
+
+    # Center Court
+    center_outer_arc = Arc((0, 422.5), 120, 120, theta1=180, theta2=0,
+                           linewidth=lw, color=color)
+    center_inner_arc = Arc((0, 422.5), 40, 40, theta1=180, theta2=0,
+                           linewidth=lw, color=color)
+
+    # List of the court elements to be plotted onto the axes
+    court_elements = [hoop, backboard, outer_box, inner_box, top_free_throw,
+                      bottom_free_throw, restricted, corner_three_a,
+                      corner_three_b, three_arc, center_outer_arc,
+                      center_inner_arc]
+
+    if outer_lines:
+        # Draw the half court line, baseline and side out bound lines
+        outer_lines = Rectangle((-250, -47.5), 500, 470, linewidth=lw,
+                                color=color, fill=False)
+        court_elements.append(outer_lines)
+
+    # Add the court elements onto the axes
+    for element in court_elements:
+        ax.add_patch(element)
+
+    return ax
+
+for j in HA2teams:
+    cmade={1:'green',0:'red'}
+    plt.figure(figsize=(12,11))
+    plt.scatter(data2002.loc[data2002['opponent']==j,'loc_x'], data2002.loc[data2002['opponent']==j,'loc_y'], c=data2002.loc[data2002['opponent']==j,'shot_made_flag'].map(cmade))
+    draw_court(outer_lines=True)
+    # Descending values along the axis from left to right
+    plt.xlim(300,-300)
+    plt.ylim(-100,500)
+    plt.savefig('Graphs2002/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.show()
+
+    print(data1.shot_zone_area.unique())
+
+    shot_zone_dict = {'Left Side(L)': 'red',
+                      'Left Side Center(LC)': 'orange',
+                      'Center(C)': 'purple',
+                      'Right Side Center(RC)': 'green',
+                      'Right Side(R)': 'blue',
+                      'Back Court(BC)': 'grey'
+                      }
+
+
+    plt.figure(figsize=(12,11))
+    plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
+    draw_court(outer_lines=True)
+    # Descending values along the axis from left to right
+    plt.xlim(300,-300)
+    plt.ylim(-100,500)
+    plt.savefig('Graphs2002/ShotChart_v2 '+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.show()
+
+for j in LA2teams:
+    cmade={1:'green',0:'red'}
+    plt.figure(figsize=(12,11))
+    plt.scatter(data2002.loc[data2002['opponent']==j,'loc_x'], data2002.loc[data2002['opponent']==j,'loc_y'], c=data2002.loc[data2002['opponent']==j,'shot_made_flag'].map(cmade))
+    draw_court(outer_lines=True)
+    # Descending values along the axis from left to right
+    plt.xlim(300,-300)
+    plt.ylim(-100,500)
+    plt.savefig('Graphs2002/ShotChart_v1 '+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.show()
+
+    print(data1.shot_zone_area.unique())
+
+    shot_zone_dict = {'Left Side(L)': 'red',
+                      'Left Side Center(LC)': 'orange',
+                      'Center(C)': 'purple',
+                      'Right Side Center(RC)': 'green',
+                      'Right Side(R)': 'blue',
+                      'Back Court(BC)': 'grey'
+                      }
+
+
+    plt.figure(figsize=(12,11))
+    plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
+    draw_court(outer_lines=True)
+    # Descending values along the axis from left to right
+    plt.xlim(300,-300)
+    plt.ylim(-100,500)
+    plt.savefig('Graphs2002/ShotChart_v2 '+j+'.jpeg', dpi=300, bbox_inches='tight')
+    plt.show()
