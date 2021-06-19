@@ -50,15 +50,22 @@ Ideas for EDA. Don't need to do all of them.
 #5. Against which team did he best/worst perform
 #6. Scoring avg per period
 #7. Do analysis based on minutes and seconds remaining
-'''
+
 
 # Shot chart - overlay zone on court
 pd.pivot_table(data1, index=['shot_type'],values=['made'], columns=['period'], aggfunc='count')
 pd.pivot_table(data1, index=['shot_zone_area'],values=['shot_made_flag'], columns=['made'], aggfunc='count')
+'''
 
 
-# analysis by game time - minutes and seconds
 
+
+'''
+# Already done else where
+# Look at shot zone chart for teams in which he had highest field goal percentage and lowest field goal percentage
+# Use effective field goal percentage
+# https://www.basketball-reference.com/about/glossary.html
+'''
 
 # Function to draw court and plot Bryant's shots
 # Function obtained from external source
@@ -268,8 +275,48 @@ plt.savefig('../Graphs/ShotChart_v4_draft.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 
-# Add avg field goal percentage by distance - do (1) bins and (2) continuous line
+# ----------------------------------------
+### Pre-Processing ###
 
-# Look at shot zone chart for teams in which he had highest field goal percentage and lowest field goal percentage
-# Use effective field goal percentage
-# https://www.basketball-reference.com/about/glossary.html
+
+# Add avg field goal percentage by distance - do (1) bins and (2) continuous line
+#pd.crosstab(data1.shot_distance, data1.made).apply(lambda r: r/r.sum(), axis=1)
+#pd.crosstab(data1.shot_distance, data1.made).apply(lambda r: r.sum(), axis=1)
+distances = pd.crosstab(data1.shot_distance, data1.made).apply(lambda r: r.sum(), axis=1).index
+distance_attempts = pd.crosstab(data1.shot_distance, data1.made).apply(lambda r: r.sum(), axis=1)
+distance_percent = pd.crosstab(data1.shot_distance, data1.made).apply(lambda r: r/r.sum(), axis=1)['Made']
+
+fig, ax1 = plt.subplots()
+
+color1 = 'tab:red'
+ax1.set_xlabel('Distance from basket')
+ax1.set_ylabel('Attempts', color=color1)
+ax1.plot(distances, distance_attempts, color=color1)
+ax1.tick_params(axis='y', labelcolor=color1)
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+color2 = 'tab:blue'
+ax2.set_ylabel('Field Goal Percentage', color=color2)  # we already handled the x-label with ax1
+ax2.plot(distances, distance_percent, color=color2)
+ax2.tick_params(axis='y', labelcolor=color2)
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.show()
+
+
+# Features to consider
+# ['action_type', 'combined_shot_type', 'period', 'playoffs',
+#        'season', 'shot_distance', 'shot_made_flag',
+#        'shot_type', 'shot_zone_area', 'shot_zone_basic', 'shot_zone_range',
+#        'made']
+
+# Look for variation in field goal percentage in the feature values
+# If a feature has that variation, we should add it to the model
+pd.crosstab(data1.shot_zone_range, data1.made).apply(lambda r: r/r.sum(), axis=1)
+
+# Correlation matrix of features to output
+
+
+# ----------------------------------------
+### Modeling ###
