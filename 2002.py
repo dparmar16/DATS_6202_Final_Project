@@ -46,7 +46,7 @@ for bar in plots.patches:
                    size=15, xytext=(0, 8),
                    textcoords='offset points')
 
-plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged highest')
+plt.title('barplot of avg score vs 5 opponent teams - that kobe averaged highest')
 plt.savefig('Graphs2002/2002_1_1.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 lenght1=opp_points_df_sort['team'].size
@@ -58,7 +58,7 @@ for bar in plots.patches:
                     bar.get_height()), ha='center', va='center',
                    size=15, xytext=(0, 8),
                    textcoords='offset points')
-plt.title('barplot of 5 avg score vs opponent teams - that kobe averaged least')
+plt.title('barplot of avg score vs 5 opponent teams - that kobe averaged least')
 plt.savefig('Graphs2002/2002_1_2.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
@@ -72,63 +72,37 @@ data2002_yes=data2002[data2002['shot_made_flag']==1]
 
 print('most effective action types against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
-for j in HA2teams:
-    # actions2002=list(data2002.loc[data2002['opponent']==j,'action_type'].unique())
-    # actions_dict1={}
-    # total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
-    # shots_percent1=[]
-    #
-    # for i in actions2002:
-    #     score_no=data2002.loc[(data2002['opponent']==j) & (data2002['action_type']==i),'shot_made_flag'].size
-    #     actions_dict1[i]=score_no
-    #     shots_percent1.append(round((score_no*100)/total_size,2))
-    # print('for team : ',j,'for total attempts')
-    # print(actions_dict1)
-    # print(shots_percent1)
-    #
-    # shots_percent1.sort(reverse=True)
-    # plt.figure(figsize=(10,8))
-    # plots=data2002.loc[data2002['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
-    # z=0
-    # for bar in plots.patches:
-    #     plots.annotate('%0.2f%%'%(shots_percent1[z]),
-    #                    (bar.get_x() + bar.get_width() / 2,
-    #                     bar.get_height()), ha='center', va='center',
-    #                    size=15, xytext=(0, 8),
-    #                    textcoords='offset points')
-    #     z=z+1
-    #
-    # plt.title('Histogram of top 5 action_type for '+j+'- total')
-    # plt.tight_layout()
-    # plt.savefig('Graphs2002/2002_2-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
-    # plt.show()
 
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+for j in HA2teams:
+    actions2002=list(data2002.loc[data2002['opponent']==j,'action_type'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['action_type']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['action_type']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
 
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2[:5],columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of top 5 action_type for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of top 5 action_type for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_2-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -136,60 +110,35 @@ for j in HA2teams:
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    # actions2002=list(data2002.loc[data2002['opponent']==j,'action_type'].unique())
-    # actions_dict1={}
-    # total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
-    # shots_percent1=[]
-    #
-    # for i in actions2002:
-    #     score_no=data2002.loc[(data2002['opponent']==j) & (data2002['action_type']==i),'shot_made_flag'].size
-    #     actions_dict1[i]=score_no
-    #     shots_percent1.append(round((score_no*100)/total_size,2))
-    # print('for team : ',j,'for total attempts')
-    # print(actions_dict1)
-    # print(shots_percent1)
-    #
-    # shots_percent1.sort(reverse=True)
-    # plt.figure(figsize=(10,8))
-    # plots=data2002.loc[data2002['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
-    # z=0
-    # for bar in plots.patches:
-    #     plots.annotate('%0.2f%%'%(shots_percent1[z]),
-    #                    (bar.get_x() + bar.get_width() / 2,
-    #                     bar.get_height()), ha='center', va='center',
-    #                    size=15, xytext=(0, 8),
-    #                    textcoords='offset points')
-    #     z=z+1
-    #
-    # plt.title('Histogram of top 5 action_type for '+j+'- total')
-    # plt.tight_layout()
-    # plt.savefig('Graphs2002/2002_2-3_'+j+'.jpeg', dpi=300, bbox_inches='tight')
-    # plt.show()
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'action_type'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['action_type']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['action_type']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
+
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'action_type'].value_counts()[:5,].plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2[:5],columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of top 5 action_type for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of top 5 action_type for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_2-4_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -198,32 +147,35 @@ for j in LA2teams:
 print('most effective shot zone area against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'shot_zone_area'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_area']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['shot_zone_area']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
 
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].value_counts()[:5,].plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of shot_zone_area for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of shot_zone_area for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_3-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -231,31 +183,35 @@ for j in HA2teams:
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'shot_zone_area'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_area']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['shot_zone_area']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
+
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].value_counts().plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of shot_zone_area for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of shot_zone_area for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_3-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -264,32 +220,35 @@ for j in LA2teams:
 print('most effective shot zone basic against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'shot_zone_basic'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_basic']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['shot_zone_basic']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
 
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of shot_zone_basic for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of shot_zone_basic for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_4-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -297,31 +256,35 @@ for j in HA2teams:
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'shot_zone_basic'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_basic']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['shot_zone_basic']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
+
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_basic'].value_counts().plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of shot_zone_basic for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of shot_zone_basic for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_4-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -330,32 +293,35 @@ for j in LA2teams:
 print('most effective shot_zone_range against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'shot_zone_range'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_range']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['shot_zone_range']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
 
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].value_counts().plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of shot_zone_range for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of shot_zone_range for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_5-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -363,31 +329,35 @@ for j in HA2teams:
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'shot_zone_range'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['shot_zone_range']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['shot_zone_range']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
+
     shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_range'].value_counts().plot(kind='bar',color=colors)
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
                        size=15, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
-
-    plt.title('Histogram of shot_zone_range for '+j+'- scored')
+    ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
+    ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    plt.title('Histogram of shot_zone_range for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
     plt.tight_layout()
     plt.savefig('Graphs2002/2002_5-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
@@ -396,67 +366,76 @@ for j in LA2teams:
 print('most effective period against highest and lowest averaged teams')
 print('for 2 teams kobe averaged highest')
 for j in HA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'period'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'period'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['period']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['period']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
 
-    shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=sns.barplot(x=list(actions_dict1_yes.keys()), y=list(actions_dict1_yes.values()))
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
-                       size=15, xytext=(0, 8),
+                       size=10, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
 
-    plt.title('shots scored vs period for '+j+'- scored')
-    plt.xlabel('period/quarters')
-    plt.ylabel('number of shots')
+    l1=np.array(list(actions2002))-1
+    ax2.plot(l1, plot_df1['eff'], 'b-')
+    ax2.scatter(l1, plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    # ax2.set_ylim([20,50])
+    plt.title('shots scored vs period for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'])
+    plt.tight_layout()
     plt.savefig('Graphs2002/2002_6-1_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
 
 print('for 2 teams kobe averaged lowest')
 for j in LA2teams:
-    actions2002=list(data2002_yes.loc[data2002_yes['opponent']==j,'period'].unique())
-    actions_dict1_yes={}
-    total_size=data2002_yes.loc[data2002_yes['opponent']==j,'shot_made_flag'].size
+    actions2002=list(data2002.loc[data2002['opponent']==j,'period'].unique())
+    total_size=data2002.loc[data2002['opponent']==j,'shot_made_flag'].size
     shots_percent2=[]
 
     for i in actions2002:
         score_no=data2002_yes.loc[(data2002_yes['opponent']==j) & (data2002_yes['period']==i),'shot_made_flag'].size
-        actions_dict1_yes[i]=score_no
-        shots_percent2.append(round((score_no*100)/total_size,2))
+        total_size1=data2002.loc[(data2002['opponent']==j) & (data2002['period']==i),'shot_made_flag'].size
+        shots_percent2.append([total_size1,(score_no*100)/total_size1,i,(total_size1*100)/total_size])
     print('for team : ',j,'for scored shots')
-    print(actions_dict1_yes)
     print(shots_percent2)
-    shots_percent2.sort(reverse=True)
-    plt.figure(figsize=(10,8))
-    plots=sns.barplot(x=list(actions_dict1_yes.keys()), y=list(actions_dict1_yes.values()))
+
+    plot_df1=pd.DataFrame(shots_percent2,columns=['count','eff','type','avg'], dtype=float)
+    fig, ax1 = plt.subplots(figsize=(10,8))
+    ax2 = ax1.twinx()
+    plots=sns.barplot(x='type',y='count',data=plot_df1,ax=ax1)
     z=0
     for bar in plots.patches:
-        plots.annotate('%0.2f%%'%(shots_percent2[z]),
+        plots.annotate('%0.2f%%'%(shots_percent2[z][3]),
                        (bar.get_x() + bar.get_width() / 2,
                         bar.get_height()), ha='center', va='center',
-                       size=15, xytext=(0, 8),
+                       size=10, xytext=(0, 8),
                        textcoords='offset points')
         z=z+1
 
-    plt.title('shots scored vs period for '+j+'- scored')
-    plt.xlabel('period/quarters')
-    plt.ylabel('number of shots')
+    l1=np.array(list(actions2002))-1
+    ax2.plot(l1, plot_df1['eff'], 'b-')
+    ax2.scatter(l1, plot_df1['eff'],s=40)
+    ax2.set_ylabel('FG%')
+    # ax2.set_ylim([20,50])
+    plt.title('shots scored vs period for '+j+'- 2002')
+    ax1.set_xticklabels(labels=plot_df1['type'])
+    plt.tight_layout()
     plt.savefig('Graphs2002/2002_6-2_'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
@@ -539,25 +518,6 @@ for j in HA2teams:
     plt.savefig('Graphs2002/ShotChart_v1 for'+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
-    print(data1.shot_zone_area.unique())
-
-    shot_zone_dict = {'Left Side(L)': 'red',
-                      'Left Side Center(LC)': 'orange',
-                      'Center(C)': 'purple',
-                      'Right Side Center(RC)': 'green',
-                      'Right Side(R)': 'blue',
-                      'Back Court(BC)': 'grey'
-                      }
-
-
-    plt.figure(figsize=(12,11))
-    plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
-    draw_court(outer_lines=True)
-    # Descending values along the axis from left to right
-    plt.xlim(300,-300)
-    plt.ylim(-100,500)
-    plt.savefig('Graphs2002/ShotChart_v2 '+j+'.jpeg', dpi=300, bbox_inches='tight')
-    plt.show()
 
 for j in LA2teams:
     cmade={1:'green',0:'red'}
@@ -570,22 +530,3 @@ for j in LA2teams:
     plt.savefig('Graphs2002/ShotChart_v1 '+j+'.jpeg', dpi=300, bbox_inches='tight')
     plt.show()
 
-    print(data1.shot_zone_area.unique())
-
-    shot_zone_dict = {'Left Side(L)': 'red',
-                      'Left Side Center(LC)': 'orange',
-                      'Center(C)': 'purple',
-                      'Right Side Center(RC)': 'green',
-                      'Right Side(R)': 'blue',
-                      'Back Court(BC)': 'grey'
-                      }
-
-
-    plt.figure(figsize=(12,11))
-    plt.scatter(data2002_yes.loc[data2002_yes['opponent']==j,'loc_x'], data2002_yes.loc[data2002_yes['opponent']==j,'loc_y'], c=data2002_yes.loc[data2002_yes['opponent']==j,'shot_zone_area'].map(shot_zone_dict))
-    draw_court(outer_lines=True)
-    # Descending values along the axis from left to right
-    plt.xlim(300,-300)
-    plt.ylim(-100,500)
-    plt.savefig('Graphs2002/ShotChart_v2 '+j+'.jpeg', dpi=300, bbox_inches='tight')
-    plt.show()
