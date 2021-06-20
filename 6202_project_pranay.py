@@ -249,6 +249,7 @@ plt.savefig('Graphs/7.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
 
 # 8. shots vs period
+
 periods=list(data1['period'].unique())
 shots_percent=[]
 for i in periods:
@@ -269,11 +270,15 @@ for bar in plots.patches:
                    textcoords='offset points')
     z=z+1
 
-ax2.plot(plot_df1['type'], plot_df1['eff'], 'b-')
-ax2.scatter(plot_df1['type'], plot_df1['eff'],s=40)
+l1=np.array(list(periods))-1
+ax2.plot(l1, plot_df1['eff'], 'b-')
+ax2.scatter(l1, plot_df1['eff'],s=40)
 ax2.set_ylabel('FG%')
+ax2.set_ylim([20,50])
 plt.title('shots attempted vs period')
-ax1.set_xticklabels(labels=plot_df1['type'],rotation=90)
+ax1.set_xticklabels(labels=plot_df1['type'])
 plt.tight_layout()
 plt.savefig('Graphs/8.jpeg', dpi=300, bbox_inches='tight')
 plt.show()
+
+
