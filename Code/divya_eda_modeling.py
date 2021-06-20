@@ -13,6 +13,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Rectangle, Arc
 from matplotlib import rcParams
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import MinMaxScaler
+
 
 # Look at dataset
 data = pd.read_csv('../Data/data.csv', header=0)
@@ -314,7 +317,7 @@ plt.show()
 # Look for variation in field goal percentage in the feature values
 # If a feature has that variation, we should add it to the model
 
-# Not using action type since it has too many values, many with small sample
+# May or may not use action type since it has too many values, many with small sample
 pd.crosstab(data1.action_type, data1.made)
 pd.crosstab(data1.action_type, data1.made).apply(lambda r: r/r.sum(), axis=1)
 
@@ -350,11 +353,61 @@ pd.crosstab(data1.shot_zone_basic, data1.made).apply(lambda r: r/r.sum(), axis=1
 pd.crosstab(data1.shot_zone_range, data1.made)
 pd.crosstab(data1.shot_zone_range, data1.made).apply(lambda r: r/r.sum(), axis=1)
 
+# Drop all columns that aren't going into the model
+data1.drop(['game_event_id', 'game_id', 'lat',
+       'loc_x', 'loc_y', 'lon', 'minutes_remaining',
+       'seconds_remaining',
+       'team_id', 'team_name', 'game_date', 'matchup', 'opponent', 'shot_id',
+       'made'], axis=1, inplace=True)
+
+# Change shot distance max to 40 to reduce variable range caused by outliers
+data1['shot_distance'] = np.where(data1['shot_distance'] >= 40, 40, data1['shot_distance'])
+
+# Replace some columns in anticipation of encoder
+# Encoder works in alphabetical order
+data1['combined_shot_type'].replace('Jump Shot', 'EE')
+data1['combined_shot_type'].replace('Layup', 'BB')
+data1['combined_shot_type'].replace('Dunk', 'AA')
+data1['combined_shot_type'].replace('Tip Shot', 'CC')
+data1['combined_shot_type'].replace('Hook Shot', 'DD')
+
+
+# Separate features and target
+X = data1.drop(['shot_made_flag'], axis=1)
+y = data1['shot_made_flag']
 
 # Transform variables
+# ['action_type', 'combined_shot_type', 'period', 'playoffs',
+#        'season', 'shot_distance'
+#        'shot_type', 'shot_zone_area', 'shot_zone_basic', 'shot_zone_range',
+#        ]
+# Shot made flag needs to be label encoded
+le = LabelEncoder()
+mm = MinMaxScaler()
+
+# May or may not use action type since it has too many values, many with small sample
+# Decide to use it, as neural networks aren't as affected by curse of dimensionality
+# Label encode it and scale 0 to 1
+# Do this for the other columns as well
+columns_to_transform =  ['action_type', 'combined_shot_type', 'period', 'playoffs',
+        'season', 'shot_distance'
+        'shot_type', 'shot_zone_area', 'shot_zone_basic', 'shot_zone_range',
+        ]
+
+for c in X.columns:
+    X[c] = le.fit_transform(X[c])
+    X[c] = mm.fit_transform(X[c])
+
+
+# Label encode y
+y = le.fit_transform(y)
+print(y.value_counts())
+
 
 
 # Correlation matrix of features to output
+data_for_corr = pd.merge(X, y)
+data_for_corr.corr()
 
 
 # ----------------------------------------
