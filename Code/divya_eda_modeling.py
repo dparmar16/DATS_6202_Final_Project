@@ -15,7 +15,9 @@ from matplotlib.patches import Circle, Rectangle, Arc
 from matplotlib import rcParams
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import MinMaxScaler
-
+from sklearn.neural_network import MLPClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix
 
 # Look at dataset
 data = pd.read_csv('../Data/data.csv', header=0)
@@ -431,4 +433,10 @@ print(y)
 
 # ----------------------------------------
 ### Modeling ###
+
+# Train-test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=123)
+clf = MLPClassifier(random_state=123, max_iter=200).fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+confusion_matrix(y_test, y_pred)
 
