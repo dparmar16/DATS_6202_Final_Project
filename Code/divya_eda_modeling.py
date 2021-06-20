@@ -365,11 +365,33 @@ data1['shot_distance'] = np.where(data1['shot_distance'] >= 40, 40, data1['shot_
 
 # Replace some columns in anticipation of encoder
 # Encoder works in alphabetical order
-data1['combined_shot_type'].replace('Jump Shot', 'EE')
-data1['combined_shot_type'].replace('Layup', 'BB')
-data1['combined_shot_type'].replace('Dunk', 'AA')
-data1['combined_shot_type'].replace('Tip Shot', 'CC')
-data1['combined_shot_type'].replace('Hook Shot', 'DD')
+data1['combined_shot_type'].replace('Jump Shot', 'EE', inplace=True)
+data1['combined_shot_type'].replace('Layup', 'BB', inplace=True)
+data1['combined_shot_type'].replace('Dunk', 'AA', inplace=True)
+data1['combined_shot_type'].replace('Tip Shot', 'CC', inplace=True)
+data1['combined_shot_type'].replace('Hook Shot', 'DD', inplace=True)
+
+
+data1['shot_zone_area'].replace('Center(C)', 'CC', inplace=True)
+data1['shot_zone_area'].replace('Right Side Center(RC)', 'DD', inplace=True)
+data1['shot_zone_area'].replace('Right Side(R)', 'EE', inplace=True)
+data1['shot_zone_area'].replace('Left Side Center(LC)', 'BB', inplace=True)
+data1['shot_zone_area'].replace('Left Side(L)', 'AA', inplace=True)
+
+data1['shot_zone_basic'].replace('Restricted Area', 'AA', inplace=True)
+data1['shot_zone_basic'].replace('In The Paint (Non-RA)', 'BB', inplace=True)
+data1['shot_zone_basic'].replace('Mid-Range', 'CC', inplace=True)
+data1['shot_zone_basic'].replace('Left Corner 3', 'DD', inplace=True)
+data1['shot_zone_basic'].replace('Above the Break 3', 'EE', inplace=True)
+data1['shot_zone_basic'].replace('Right Corner 3', 'FF', inplace=True)
+data1['shot_zone_basic'].replace('Backcourt', 'GG', inplace=True)
+
+data1['shot_zone_range'].replace('Less Than 8 ft.', 'AA', inplace=True)
+data1['shot_zone_range'].replace('8-16 ft.', 'BB', inplace=True)
+data1['shot_zone_range'].replace('16-24 ft.', 'CC', inplace=True)
+data1['shot_zone_range'].replace('24+ ft.', 'DD', inplace=True)
+data1['shot_zone_range'].replace('Back Court Shot', 'EE', inplace=True)
+
 
 
 # Separate features and target
@@ -396,19 +418,16 @@ columns_to_transform =  ['action_type', 'combined_shot_type', 'period', 'playoff
 
 for c in X.columns:
     X[c] = le.fit_transform(X[c])
-    X[c] = mm.fit_transform(X[c])
+    X[c] = mm.fit_transform(X[c].values.reshape(-1,1))
 
 
 # Label encode y
 y = le.fit_transform(y)
-print(y.value_counts())
-
+print(y)
 
 
 # Correlation matrix of features to output
-data_for_corr = pd.merge(X, y)
-data_for_corr.corr()
-
+# TO DO
 
 # ----------------------------------------
 ### Modeling ###
